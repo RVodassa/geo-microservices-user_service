@@ -107,3 +107,17 @@ func (s *UserServiceServer) List(ctx context.Context, req *pb.ListRequest) (*pb.
 		Total: count,
 	}, nil
 }
+
+func (s *UserServiceServer) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	exist, err := s.service.Login(ctx, req.Login, req.Password)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &pb.LoginResponse{
+		Status: exist,
+	}, nil
+}

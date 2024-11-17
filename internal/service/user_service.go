@@ -8,6 +8,7 @@ import (
 
 type UserServiceProvider interface {
 	Register(ctx context.Context, u *entity.User) (id uint64, err error)
+	Login(ctx context.Context, login, password string) (bool, error)
 	Delete(ctx context.Context, id uint64) error
 	Profile(ctx context.Context, id uint64) (*entity.User, error)
 	List(ctx context.Context, offset, limit uint64) ([]*entity.User, uint64, error)
@@ -34,4 +35,8 @@ func (s *UserService) Profile(ctx context.Context, id uint64) (*entity.User, err
 }
 func (s *UserService) List(ctx context.Context, offset, limit uint64) ([]*entity.User, uint64, error) {
 	return s.repo.List(ctx, offset, limit)
+}
+
+func (s *UserService) Login(ctx context.Context, login, password string) (bool, error) {
+	return s.repo.Login(ctx, login, password)
 }

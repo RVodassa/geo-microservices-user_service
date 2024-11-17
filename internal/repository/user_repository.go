@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/RVodassa/geo-microservices-user/internal/domain/entity"
 )
@@ -12,6 +13,7 @@ type UserRepositoryProvider interface {
 	Delete(ctx context.Context, id uint64) error
 	Profile(ctx context.Context, id uint64) (*entity.User, error)
 	List(ctx context.Context, offset, limit uint64) ([]*entity.User, uint64, error)
+	Login(ctx context.Context, login, password string) (bool, error)
 }
 
 type UserRepository struct {
@@ -90,4 +92,28 @@ func (r *UserRepository) List(ctx context.Context, offset, limit uint64) ([]*ent
 	}
 
 	return users, totalCount, nil
+}
+
+func (r *UserRepository) Login(ctx context.Context, login, password string) (bool, error) {
+	user := &entity.User{}
+	// Запрос на выборку только id и password (без других данных)
+	query := `SELECT id, password FROM users WHERE login = $1;`
+	row := r.db.QueryRowContext(ctx, query, login)
+
+	// Проверяем на ошибки при сканировании строки
+	if err := row.Scan(&user.ID, &user.Password); err != nil {
+		// Если строка не найдена, возвращаем false, а не ошибку
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, nil
+		}
+		return false, err
+	}
+
+	// Если пароль совпадает, возвращаем true
+	if user.Password == password {
+		return true, nil
+	}
+
+	// Если пароль не совпадает, возвращаем false
+	return false, nil
 }
