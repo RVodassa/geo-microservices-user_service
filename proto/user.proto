@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package user;
+option go_package = "geo-microservices/user/proto/user";
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+message CreateUserRequest {
+  string password = 3;
+  string login = 4;
+}
+
+message CreateUserResponse {
+  uint64 id = 1;
+}
+
+message DeleteUserRequest {
+  uint64 id = 1;
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+}
