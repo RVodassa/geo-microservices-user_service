@@ -1,4 +1,4 @@
-module github.com/RVodassa/geo-microservices-user
+module github.com/RVodassa/geo-microservices-user/v2
 
 go 1.23.3
 
