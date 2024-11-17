@@ -1,26 +1,71 @@
+// protoc --go_out=./proto/ --go-grpc_out=./proto/ --proto_path=./proto ./proto/user.proto
 syntax = "proto3";
 
-package user;
-option go_package = "geo-microservices/user/proto/user";
+package user_service;
 
+option go_package = "./generated";
+
+// Сервис для управления пользователями
 service UserService {
-  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
-  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+  // Регистрация пользователя
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+
+  // Удаление пользователя
+  rpc Delete (DeleteRequest) returns (DeleteResponse);
+
+  // Получение профиля пользователя
+  rpc Profile (ProfileRequest) returns (ProfileResponse);
+
+  // Получение списка пользователей
+  rpc List (ListRequest) returns (ListResponse);
 }
 
-message CreateUserRequest {
-  string password = 3;
-  string login = 4;
+// Запрос на регистрацию пользователя
+message RegisterRequest {
+  string login = 1;
+  string password = 2;
 }
 
-message CreateUserResponse {
+// Ответ на регистрацию пользователя
+message RegisterResponse {
   uint64 id = 1;
 }
 
-message DeleteUserRequest {
+// Запрос на удаление пользователя
+message DeleteRequest {
   uint64 id = 1;
 }
 
-message DeleteUserResponse {
-  bool success = 1;
+// Ответ на удаление пользователя
+message DeleteResponse {
+  bool status = 1;
+}
+
+// Запрос на получение профиля пользователя
+message ProfileRequest {
+  uint64 id = 1;
+}
+
+// Ответ на получение профиля пользователя
+message ProfileResponse {
+  uint64 id = 1;
+  string login = 2;
+}
+
+// Запрос на получение списка пользователей
+message ListRequest {
+  uint64 offset = 1;
+  uint64 limit = 2;
+}
+
+// Ответ на получение списка пользователей
+message ListResponse {
+  repeated User users = 1;
+  uint64 total = 2;
+}
+
+// Описание сущности пользователя
+message User {
+  uint64 id = 1;
+  string login = 2;
 }

@@ -3,7 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"geo-microservices/user/internal/domain/entity"
+	"fmt"
+	"github.com/RVodassa/geo-microservices-user/internal/domain/entity"
 )
 
 type UserRepositoryProvider interface {
@@ -23,21 +24,19 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	}
 }
 
-func (r *UserRepository) CreateUser(ctx context.Context, u *entity.User) (id uint64, err error) {
-	// Убедитесь, что используете правильное имя таблицы (например, "users")
+func (r *UserRepository) Register(ctx context.Context, u *entity.User) (id uint64, err error) {
 	query := `INSERT INTO users (password, login) VALUES ($1, $2) RETURNING id;`
 
-	// Используем QueryRow, чтобы получить результат в одну строку
-	err = r.db.QueryRowContext(ctx, query, u.Password, u.Login).Scan(&id)
+	err = r.db.QueryRowContext(ctx, query, u.Password, u.Login).Scan(&u.ID)
 	if err != nil {
 		return 0, err
 	}
 
 	// Возвращаем ID добавленного пользователя
-	return id, nil
+	return u.ID, nil
 }
 
-func (r *UserRepository) DeleteUser(ctx context.Context, id uint64) error {
+func (r *UserRepository) Delete(ctx context.Context, id uint64) error {
 
 	query := `DELETE FROM users WHERE id = ($1)`
 	_, err := r.db.Exec(query, id)
@@ -46,4 +45,49 @@ func (r *UserRepository) DeleteUser(ctx context.Context, id uint64) error {
 	}
 
 	return nil
+}
+
+func (r *UserRepository) Profile(ctx context.Context, id uint64) (*entity.User, error) {
+	var u entity.User
+	query := `SELECT id, login FROM users WHERE id = $1;`
+	row := r.db.QueryRowContext(ctx, query, id)
+	if err := row.Scan(&u.ID, &u.Login); err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
+
+func (r *UserRepository) List(ctx context.Context, offset, limit uint64) ([]*entity.User, uint64, error) {
+	var users []*entity.User
+	var totalCount uint64
+
+	// Получаем общее количество записей
+	countQuery := `SELECT COUNT(*) FROM users;`
+	err := r.db.QueryRowContext(ctx, countQuery).Scan(&totalCount)
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to get total user count: %w", err)
+	}
+
+	// Получаем пользователей с использованием offset и limit
+	query := `SELECT id, login FROM users ORDER BY id LIMIT $1 OFFSET $2;`
+	rows, err := r.db.QueryContext(ctx, query, limit, offset)
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to execute user list query: %w", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var u entity.User
+		if err := rows.Scan(&u.ID, &u.Login); err != nil {
+			return nil, 0, fmt.Errorf("failed to scan user row: %w", err)
+		}
+		users = append(users, &u)
+	}
+
+	// Проверяем на ошибки итерации
+	if err := rows.Err(); err != nil {
+		return nil, 0, fmt.Errorf("row iteration error: %w", err)
+	}
+
+	return users, totalCount, nil
 }
