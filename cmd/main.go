@@ -1,11 +1,11 @@
 package main
 
 import (
-	grpc_service "github.com/RVodassa/geo-microservices-user/internal/grpc"
-	"github.com/RVodassa/geo-microservices-user/internal/repository"
-	"github.com/RVodassa/geo-microservices-user/internal/service"
-	"github.com/RVodassa/geo-microservices-user/internal/sql"
-	proto "github.com/RVodassa/geo-microservices-user/proto/generated"
+	grpc_service "github.com/RVodassa/geo-microservices-user_service/internal/grpc-server"
+	"github.com/RVodassa/geo-microservices-user_service/internal/repository"
+	"github.com/RVodassa/geo-microservices-user_service/internal/service"
+	"github.com/RVodassa/geo-microservices-user_service/internal/sql"
+	proto "github.com/RVodassa/geo-microservices-user_service/proto/generated"
 	"google.golang.org/grpc"
 	"net"
 	"sync"

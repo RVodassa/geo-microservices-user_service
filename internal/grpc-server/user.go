@@ -2,9 +2,9 @@ package userGrpcServer
 
 import (
 	"context"
-	"github.com/RVodassa/geo-microservices-user/internal/domain/entity"
-	"github.com/RVodassa/geo-microservices-user/internal/service"
-	pb "github.com/RVodassa/geo-microservices-user/proto/generated"
+	"github.com/RVodassa/geo-microservices-user_service/internal/domain/entity"
+	"github.com/RVodassa/geo-microservices-user_service/internal/service"
+	pb "github.com/RVodassa/geo-microservices-user_service/proto/generated"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"log"

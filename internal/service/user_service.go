@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"github.com/RVodassa/geo-microservices-user/internal/domain/entity"
-	"github.com/RVodassa/geo-microservices-user/internal/repository"
+	"github.com/RVodassa/geo-microservices-user_service/internal/domain/entity"
+	"github.com/RVodassa/geo-microservices-user_service/internal/repository"
 )
 
 type UserServiceProvider interface {

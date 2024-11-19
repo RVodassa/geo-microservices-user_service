@@ -11,20 +11,19 @@ RUN go mod download
 COPY . .
 
 # Компилируем приложение
-RUN go build -o app ./cmd/main.go
+RUN go build -o user-service ./cmd/main.go
 
 FROM alpine
 
 WORKDIR /root/
 
 # Копируем скомпилированное приложение из образа builder
-COPY --from=builder /app/app .
+COPY --from=builder /app/user-service .
 
-# Копируем файл .env (если он существует в вашем проекте)
 COPY .env .
 
 # Открываем порт 10101
 EXPOSE 10101
 
 # Запускаем приложение
-CMD ["./app"]
+CMD ["./user-service"]

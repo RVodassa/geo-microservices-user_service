@@ -18,11 +18,11 @@ func InitDB() (*sql.DB, error) {
 	}
 
 	dbUser, dbPassword, dbHost, dbName, dbPort :=
-		os.Getenv("db_user"),
-		os.Getenv("db_password"),
-		os.Getenv("db_host"),
-		os.Getenv("db_name"),
-		os.Getenv("db_port")
+		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_PASSWORD"),
+		os.Getenv("POSTGRES_HOST"),
+		os.Getenv("POSTGRES_DB"),
+		os.Getenv("POSTGRES_PORT")
 
 	// Формирование строки подключения
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",

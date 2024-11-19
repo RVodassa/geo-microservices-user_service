@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/RVodassa/geo-microservices-user/internal/domain/entity"
+	"github.com/RVodassa/geo-microservices-user_service/internal/domain/entity"
 )
 
 type UserRepositoryProvider interface {
