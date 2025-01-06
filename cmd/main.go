@@ -1,7 +1,7 @@
 package main
 
 import (
-	grpc_service "github.com/RVodassa/geo-microservices-user_service/internal/grpc-server"
+	grpcservice "github.com/RVodassa/geo-microservices-user_service/internal/grpc-server"
 	"github.com/RVodassa/geo-microservices-user_service/internal/repository"
 	"github.com/RVodassa/geo-microservices-user_service/internal/service"
 	"github.com/RVodassa/geo-microservices-user_service/internal/sql"
@@ -28,7 +28,7 @@ func main() {
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo)
 
-	userGrpcService := grpc_service.NewUserServiceServer(userService)
+	userGrpcService := grpcservice.NewUserServiceServer(userService)
 
 	proto.RegisterUserServiceServer(grpcServer, userGrpcService)
 

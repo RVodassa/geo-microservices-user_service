@@ -12,10 +12,9 @@ import (
 )
 
 type User struct {
-	ID        uint64
-	Login     string
-	Password  string // Храним хэш пароля
-	CreatedAt string
+	ID       uint64
+	Login    string
+	Password string
 }
 
 type UserServiceServer struct {
